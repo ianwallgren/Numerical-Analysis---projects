@@ -40,12 +40,37 @@ class Experiment:
         print('Increase max number of iteration.')
         return None
     
+    
+    def one_step_newton_finite_approx(f,x0,epsilon,max_iter):
+        xn = x0
+        value_tracking = [x0]
+        list_tracking = []
+        for n in range(0,max_iter):
+            fxn = f(xn)
+            value_tracking.append(xn)
+            if abs(fxn) < epsilon:
+                print('Solution found, number of iterations:',n,'.')
+                return xn, list_tracking
+            list_tracking.append(xn)
+            Dfxn = (f(value_tracking[-2])-f(value_tracking[-1]))/(value_tracking[-2]-value_tracking[-1])
+            if Dfxn == 0:
+                print('Derivative is equal to zero, try another initial guess')
+                return None
+            xn = xn - fxn/((f(value_tracking[-2]-f(value_tracking[-1])/(value_tracking[-2]-value_tracking[-1])
+        #print('Increase max number of iteration.')
+        return None
+#%%
+   
 func = lambda x: np.arctan(x)
 deriv = lambda x: 1/((x**2)+1)
 approximate = Experiment.one_step_newton(func, deriv, 1.3, 1e-4,10)[0]
 trace = Experiment.one_step_newton(func, deriv, 1, 1e-10,10)[1]
+#%%
+approximate_2 = Experiment.one_step_newton_finite_approx(func, 1.3, 1e-4,10)[0]
 
-plt.plot(trace,label='tracking attempts')
-plt.xlabel('number of iterations')
-plt.ylabel('value')
-plt.title('Example of the iterative procedure from Newton method')
+
+#%%
+#plt.plot(trace,label='tracking attempts')
+#plt.xlabel('number of iterations')
+#plt.ylabel('value')
+#plt.title('Example of the iterative procedure from Newton method')
