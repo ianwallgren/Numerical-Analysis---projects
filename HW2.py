@@ -338,8 +338,38 @@ if __name__=="__main__":
     x0 = truck.initial_conditions()
         
         
+
         
         
+        
+        
+
+def jacobian(func, t, x, eps):
+    n = len(x)
+    J = np.eye(n)
+    fx = func(t, x)
+
+    for i in range(n):
+        x[i] = x[i] + eps
+        J[:, i] = (func(t, x) - fx) / eps
+        x[i] = x[i] - eps
+    return J
+
+
+def solver(func, t, x, eps):
+    jacob = jacobian(func, 0, init_val, eps)
+    DX = np.linalg.solve(jacob, -1 * func(t, x))
+    return x + DX
+
+scania = Truck()
+scania._initialise()
+init_val = list(scania.initial_conditions())
+func = scania.fcn
+t = 0
+
+for i in range(50):
+    norm = np.linalg.norm(init_val)
+    init_val = solver(func, t, init_val,1.e-10)
         
         
         
